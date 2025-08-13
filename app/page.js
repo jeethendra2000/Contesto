@@ -1,103 +1,134 @@
-import Image from "next/image";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import ContestCard from "@/components/ContestComponents/contestCard";
 
-export default function Home() {
+export default async function Home(params) {
+  // --- Fetch CodeChef Contests ---
+  const response = await fetch(
+    "https://www.codechef.com/api/list/contests/all"
+  );
+  if (!response.ok) throw new Error("Failed to fetch CodeChef contests");
+  const data = await response.json();
+  const codechefContests = data.future_contests;
+
+  // --- Fetch Codeforces Contests ---
+  const response2 = await fetch("https://codeforces.com/api/contest.list");
+  if (!response2.ok) throw new Error("Failed to fetch Codeforces contests");
+  const data2 = await response2.json();
+  const codeforcesRaw = data2.result;
+
+  const now = Math.floor(Date.now() / 1000);
+  const codeforcesContests = codeforcesRaw.filter(
+    (c) => c.startTimeSeconds > now
+  );
+
+  // --- Fetch LeetCode Contests ---
+  const query = `
+  query {
+    upcomingContests {
+      title
+      startTime
+      duration
+    }
+  }
+`;
+
+  const leetcodeResponse = await fetch("https://leetcode.com/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ query }),
+  });
+
+  const result = await leetcodeResponse.json();
+  const leetcodeContests = result.data.upcomingContests;
+
+  // --- Normalize all contests to a shared format ---
+  const formattedCodechef = codechefContests.map((contest) => ({
+    id: contest.contest_code,
+    name: contest.contest_name.startsWith("CodeChef")
+      ? contest.contest_name
+      : `CodeChef ${contest.contest_name}`,
+    platform: "CodeChef",
+    start_time: formatDate(contest.contest_start_date_iso),
+    url: `https://www.codechef.com/${contest.contest_code}`,
+  }));
+
+  const formattedCodeforces = codeforcesContests.map((contest) => ({
+    id: contest.id.toString(),
+    name: contest.name,
+    platform: "CodeForces",
+    start_time: formatDate(new Date(contest.startTimeSeconds * 1000)),
+    url:
+      contest.phase === "BEFORE"
+        ? `https://codeforces.com/contests/${contest.id}`
+        : `https://codeforces.com/contest/${contest.id}`,
+  }));
+
+  const formattedLeetcode = leetcodeContests.map((contest) => {
+    const slug = contest.title.toLowerCase().replace(/\s+/g, "-");
+    return {
+      id: slug,
+      name: contest.title.startsWith("LeetCode")
+        ? contest.title
+        : `LeetCode ${contest.title}`,
+      platform: "LeetCode",
+      start_time: formatDate(new Date(contest.startTime * 1000)),
+      url: `https://leetcode.com/contest/${slug}`,
+    };
+  });
+
+  // Combine and optionally sort by start time
+  const allContests = [
+    ...formattedCodechef,
+    ...formattedCodeforces,
+    ...formattedLeetcode,
+  ].sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div style={{ padding: "1rem" }}>
+      <Typography variant="h4" align="center" gutterBottom color="textPrimary">
+        Contests
+      </Typography>
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 12, sm: 8, md: 4 }}
+      >
+        {allContests.map((contest) => (
+          <Grid
+            key={contest.id}
+            xs={12}
+            sm={6}
+            md={4}
+            lg={4}
+            sx={{ display: "flex" }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            <ContestCard
+              name={contest.name}
+              site={contest.platform}
+              start_time={contest.start_time}
+              url={contest.url}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          </Grid>
+        ))}
+      </Grid>
     </div>
   );
+}
+
+function formatDate(dateStringOrDate) {
+  const date = new Date(dateStringOrDate);
+  return date
+    .toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .replace("am", "AM")
+    .replace("pm", "PM");
 }
