@@ -6,11 +6,11 @@ export default function Footer() {
           <div className="col l6 s12">
             <h5 className="white-text">Contesto</h5>
             <p className="grey-text text-lighten-4">
-              "Never Miss a Code Challenge" <br /> <br />
+              &quot;Never Miss a Code Challenge&quot; <br /> <br />
               Contesto is a one-stop platform that aggregates upcoming
               competitive programming contests from all major platforms —
               including Codeforces, LeetCode, CodeChef, AtCoder, HackerRank, and
-              more. Whether you're a beginner or a seasoned coder, Contesto
+              more. Whether you&apos;re a beginner or a seasoned coder, Contesto
               helps you stay updated, plan ahead, and never miss a challenge.
             </p>
           </div>
@@ -24,7 +24,7 @@ export default function Footer() {
               </li>
               <li>
                 <a className="grey-text text-lighten-3" href="#!">
-                  Facebok
+                  Facebook
                 </a>
               </li>
               <li>
@@ -43,7 +43,7 @@ export default function Footer() {
       </div>
       <div className="footer-copyright">
         <div className="container">
-          © {new Date().getFullYear()} Copyright
+          &copy; {new Date().getFullYear()} Copyright
           <a className="grey-text text-lighten-4 right" href="#!">
             More Links
           </a>
