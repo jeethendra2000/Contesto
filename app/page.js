@@ -128,6 +128,7 @@ function formatDate(dateStringOrDate) {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
+      timeZone: "Asia/Kolkata",
     })
     .replace("am", "AM")
     .replace("pm", "PM");
