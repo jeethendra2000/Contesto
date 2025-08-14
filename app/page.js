@@ -122,6 +122,7 @@ function formatDate(dateStringOrDate) {
   const date = new Date(dateStringOrDate);
   return date
     .toLocaleString("en-GB", {
+      weekday: "short", 
       day: "2-digit",
       month: "short",
       year: "numeric",
