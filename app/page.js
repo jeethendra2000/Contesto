@@ -5,7 +5,7 @@ import ContestCard from "@/components/ContestComponents/contestCard";
 // 👇 force dynamic rendering on Vercel
 export const dynamic = "force-dynamic";
 
-// 👇 tells Next.js to refresh data every 60 seconds
+// 👇 tells Next.js to refresh data every 1 Hour
 export const revalidate = 3600;
 
 export default async function Home(params) {
