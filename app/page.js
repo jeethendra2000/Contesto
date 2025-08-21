@@ -2,17 +2,23 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import ContestCard from "@/components/ContestComponents/contestCard";
 
+// 👇 force dynamic rendering on Vercel
+export const dynamic = "force-dynamic";
+
 export default async function Home(params) {
   // --- Fetch CodeChef Contests ---
   const response = await fetch(
-    "https://www.codechef.com/api/list/contests/all"
+    "https://www.codechef.com/api/list/contests/all",
+    { cache: "no-store" } // ⬅️ disable caching
   );
   if (!response.ok) throw new Error("Failed to fetch CodeChef contests");
   const data = await response.json();
   const codechefContests = data.future_contests;
 
   // --- Fetch Codeforces Contests ---
-  const response2 = await fetch("https://codeforces.com/api/contest.list");
+  const response2 = await fetch("https://codeforces.com/api/contest.list", {
+    cache: "no-store",
+  });
   if (!response2.ok) throw new Error("Failed to fetch Codeforces contests");
   const data2 = await response2.json();
   const codeforcesRaw = data2.result;
@@ -39,6 +45,7 @@ export default async function Home(params) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ query }),
+    cache: "no-store",
   });
 
   const result = await leetcodeResponse.json();
