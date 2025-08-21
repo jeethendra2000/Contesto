@@ -5,6 +5,9 @@ import ContestCard from "@/components/ContestComponents/contestCard";
 // 👇 force dynamic rendering on Vercel
 export const dynamic = "force-dynamic";
 
+// 👇 tells Next.js to refresh data every 60 seconds
+export const revalidate = 3600;
+
 export default async function Home(params) {
   // --- Fetch CodeChef Contests ---
   const response = await fetch(
