@@ -12,7 +12,7 @@ export default async function Home(params) {
   // --- Fetch CodeChef Contests ---
   const response = await fetch(
     "https://www.codechef.com/api/list/contests/all",
-    { cache: "no-store" } // ⬅️ disable caching
+    { cache: "no-store" }, // ⬅️ disable caching
   );
   if (!response.ok) throw new Error("Failed to fetch CodeChef contests");
   const data = await response.json();
@@ -28,7 +28,7 @@ export default async function Home(params) {
 
   const now = Math.floor(Date.now() / 1000);
   const codeforcesContests = codeforcesRaw.filter(
-    (c) => c.startTimeSeconds > now
+    (c) => c.startTimeSeconds > now,
   );
 
   // --- Fetch LeetCode Contests ---
@@ -104,15 +104,12 @@ export default async function Home(params) {
       <Grid
         container
         spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 12, sm: 8, md: 4 }}
+        columns={{ xs: 12, sm: 12, md: 12 }}
       >
         {allContests.map((contest) => (
           <Grid
             key={contest.id}
-            xs={12}
-            sm={6}
-            md={4}
-            lg={4}
+            size={{ xs: 12, sm: 6, md: 4 }}
             sx={{ display: "flex" }}
           >
             <ContestCard
@@ -132,7 +129,7 @@ function formatDate(dateStringOrDate) {
   const date = new Date(dateStringOrDate);
   return date
     .toLocaleString("en-GB", {
-      weekday: "short", 
+      weekday: "short",
       day: "2-digit",
       month: "short",
       year: "numeric",

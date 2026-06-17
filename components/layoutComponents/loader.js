@@ -15,10 +15,10 @@ export default function TestComponent() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <Typography variant="h4">Test Component</Typography>
       </Grid>
-      <Grid item xs={12}>
+      <Grid size={12}>
         {loading ? (
           <CircularProgress />
         ) : (
