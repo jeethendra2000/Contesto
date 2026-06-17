@@ -35,6 +35,7 @@ export default function ContestCard({
   start_datetime,
   duration_seconds,
   url,
+  showCalendar = true,
 }) {
   const logo = siteLogos[site] || siteLogos["Informatsy"]; // fallback image
 
@@ -155,33 +156,37 @@ export default function ContestCard({
               height: "100%",
             }}
           >
-            <Tooltip title="Add to calendar">
-              <IconButton
-                aria-label="add event"
-                disableRipple
-                disableFocusRipple
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToCalendar();
-                }}
-                sx={{
-                  p: 0.5,
-                  minWidth: 0,
-                  transition: "transform 0.1s ease",
+            {showCalendar && (
+              <Tooltip title="Add to calendar">
+                <IconButton
+                  aria-label="add event"
+                  disableRipple
+                  disableFocusRipple
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCalendar();
+                  }}
+                  sx={{
+                    p: 0.5,
+                    minWidth: 0,
+                    transition: "transform 0.1s ease",
 
-                  "&:active": {
-                    transform: "scale(0.85)",
-                  },
-                }}
-              >
-                <Image
-                  src={added ? "/Icons/check-mark.png" : "/Icons/add-event.png"}
-                  alt="Add event"
-                  width={28}
-                  height={28}
-                />
-              </IconButton>
-            </Tooltip>
+                    "&:active": {
+                      transform: "scale(0.85)",
+                    },
+                  }}
+                >
+                  <Image
+                    src={
+                      added ? "/Icons/check-mark.png" : "/Icons/add-event.png"
+                    }
+                    alt="Add event"
+                    width={28}
+                    height={28}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
           </Box>
         }
       />

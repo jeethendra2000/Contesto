@@ -1,7 +1,8 @@
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import ContestCard from "@/components/ContestComponents/contestCard";
-
+import Image from "next/image";
+import { Box } from "@mui/material";
 // 👇 force dynamic rendering on Vercel
 export const dynamic = "force-dynamic";
 
@@ -17,6 +18,7 @@ export default async function Home(params) {
   if (!response.ok) throw new Error("Failed to fetch CodeChef contests");
   const data = await response.json();
   const codechefContests = data.future_contests;
+  const codechefPast = data.past_contests || [];
 
   // --- Fetch Codeforces Contests ---
   const response2 = await fetch("https://codeforces.com/api/contest.list", {
@@ -99,23 +101,84 @@ export default async function Home(params) {
   });
 
   // Combine and optionally sort by start time
-  const allContests = [
+  const upcomingContests = [
     ...formattedCodechef,
     ...formattedCodeforces,
     ...formattedLeetcode,
   ].sort((a, b) => a.start_timestamp - b.start_timestamp);
 
+  // ----------------------------
+  // Recently Closed Contests
+  // ----------------------------
+
+  const formattedCodeforcesClosed = codeforcesRaw
+    .filter((c) => c.phase === "FINISHED")
+    .map((contest) => ({
+      id: contest.id.toString(),
+      name: contest.name,
+      platform: "CodeForces",
+      start_time: formatDate(new Date(contest.startTimeSeconds * 1000)),
+      start_datetime: new Date(contest.startTimeSeconds * 1000).toISOString(),
+      start_timestamp: contest.startTimeSeconds * 1000,
+      duration_seconds: contest.durationSeconds || 7200,
+      url: `https://codeforces.com/contest/${contest.id}`,
+    }));
+
+  const formattedCodechefClosed = codechefPast.map((contest) => ({
+    id: contest.contest_code,
+    name: contest.contest_name,
+    platform: "CodeChef",
+    start_time: formatDate(contest.contest_start_date_iso),
+    start_datetime: contest.contest_start_date_iso,
+    start_timestamp: new Date(contest.contest_start_date_iso).getTime(),
+    duration_seconds: contest.contest_duration_seconds || 7200,
+    url: `https://www.codechef.com/${contest.contest_code}`,
+  }));
+
+  const allClosed = [...formattedCodechefClosed, ...formattedCodeforcesClosed];
+
+  const recentlyClosedContests = allClosed
+    .filter((contest) => {
+      const endTime = contest.start_timestamp + contest.duration_seconds * 1000;
+
+      const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+
+      return endTime < Date.now() && endTime >= oneWeekAgo;
+    })
+    .sort((a, b) => b.start_timestamp - a.start_timestamp);
+
   return (
     <div style={{ padding: "1rem" }}>
-      <Typography variant="h4" align="center" gutterBottom color="textPrimary">
-        Upcoming contests
+      <Typography
+        variant="h4"
+        align="center"
+        mb={3}
+        gutterBottom
+        color="textPrimary"
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 1,
+          }}
+        >
+          <Image
+            src="/Icons/rocket.png"
+            alt="Completed contests"
+            width={32}
+            height={32}
+          />
+          Upcoming Contests
+        </Box>
       </Typography>
       <Grid
         container
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 12, sm: 12, md: 12 }}
       >
-        {allContests.map((contest) => (
+        {upcomingContests.map((contest) => (
           <Grid
             key={contest.id}
             size={{ xs: 12, sm: 6, md: 4 }}
@@ -128,6 +191,55 @@ export default async function Home(params) {
               start_datetime={contest.start_datetime}
               duration_seconds={contest.duration_seconds}
               url={contest.url}
+              showCalendar={true}
+            />
+          </Grid>
+        ))}
+      </Grid>
+
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        color="textPrimary"
+        paddingTop={10}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 1,
+          }}
+        >
+          <Image
+            src="/Icons/recent.png"
+            alt="Completed contests"
+            width={32}
+            height={32}
+          />
+          Recent Contests
+        </Box>
+      </Typography>
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 12, sm: 12, md: 12 }}
+      >
+        {recentlyClosedContests.map((contest) => (
+          <Grid
+            key={contest.id}
+            size={{ xs: 12, sm: 6, md: 4 }}
+            sx={{ display: "flex" }}
+          >
+            <ContestCard
+              name={contest.name}
+              site={contest.platform}
+              start_time={contest.start_time}
+              start_datetime={contest.start_datetime}
+              duration_seconds={contest.duration_seconds}
+              url={contest.url}
+              showCalendar={false}
             />
           </Grid>
         ))}
