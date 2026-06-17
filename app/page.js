@@ -108,7 +108,7 @@ export default async function Home(params) {
   return (
     <div style={{ padding: "1rem" }}>
       <Typography variant="h4" align="center" gutterBottom color="textPrimary">
-        Contests
+        Upcoming contests
       </Typography>
       <Grid
         container

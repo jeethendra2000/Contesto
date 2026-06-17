@@ -27,27 +27,28 @@ export default function Sidebar() {
               <Image
                 src="/background.jpg"
                 alt="background"
-                width={300}
-                height={30}
+                fill
                 priority
-                style={{ width: "100%", height: "auto" }}
+                style={{
+                  objectFit: "cover",
+                }}
               />
             </div>
             <a href="#user">
               <Image
                 className="circle"
-                src="/Jeethendra.jpg"
+                src="/JeethendraSR.jpg"
                 alt="Jeethendra"
                 width={180}
-                height={38}
+                height={180}
                 priority
               />
             </a>
             <a href="#name">
-              <span className="white-text name">Jeethendra</span>
+              <span className="black-text name">Jeethendra S R</span>
             </a>
             <a href="#email">
-              <span className="white-text email">
+              <span className="black-text email">
                 jeethendrajeethu8@gmail.com
               </span>
             </a>
@@ -64,12 +65,6 @@ export default function Sidebar() {
           <Link href="/calendar">
             {" "}
             <CalendarMonthIcon /> Calendar
-          </Link>
-        </li>
-        <li>
-          <Link href="/admin">
-            {" "}
-            <AdminPanelSettingsIcon /> Admin
           </Link>
         </li>
         <li>
