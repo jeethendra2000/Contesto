@@ -1,24 +1,5 @@
 @import "tailwindcss";
 
-/* :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
 body {
   background: var(--background);
   color: var(--foreground);
@@ -32,4 +13,29 @@ main {
   flex-grow: 1;
   flex-shrink: 0;
   flex-basis: auto;
+}
+
+/* MUI IconButton fixes */
+.MuiIconButton-root {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.MuiIconButton-root:hover,
+.MuiIconButton-root:active,
+.MuiIconButton-root:focus,
+.MuiIconButton-root.Mui-focusVisible {
+  background-color: transparent !important;
+}
+
+button:focus {
+  outline: none;
+}
+.MuiCardActionArea-root {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.MuiCardActionArea-root:focus,
+.MuiCardActionArea-root:active,
+.MuiCardActionArea-root.Mui-focusVisible {
+  background-color: transparent;
 }

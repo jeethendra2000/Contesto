@@ -62,6 +62,9 @@ export default async function Home(params) {
       : `CodeChef ${contest.contest_name}`,
     platform: "CodeChef",
     start_time: formatDate(contest.contest_start_date_iso),
+    start_datetime: contest.contest_start_date_iso,
+    start_timestamp: new Date(contest.contest_start_date_iso).getTime(),
+    duration_seconds: contest.contest_duration_seconds || 7200,
     url: `https://www.codechef.com/${contest.contest_code}`,
   }));
 
@@ -70,6 +73,9 @@ export default async function Home(params) {
     name: contest.name,
     platform: "CodeForces",
     start_time: formatDate(new Date(contest.startTimeSeconds * 1000)),
+    start_datetime: new Date(contest.startTimeSeconds * 1000).toISOString(),
+    start_timestamp: contest.startTimeSeconds * 1000,
+    duration_seconds: contest.durationSeconds || 7200,
     url:
       contest.phase === "BEFORE"
         ? `https://codeforces.com/contests/${contest.id}`
@@ -85,6 +91,9 @@ export default async function Home(params) {
         : `LeetCode ${contest.title}`,
       platform: "LeetCode",
       start_time: formatDate(new Date(contest.startTime * 1000)),
+      start_datetime: new Date(contest.startTime * 1000).toISOString(),
+      start_timestamp: contest.startTime * 1000,
+      duration_seconds: contest.duration || 7200,
       url: `https://leetcode.com/contest/${slug}`,
     };
   });
@@ -94,7 +103,7 @@ export default async function Home(params) {
     ...formattedCodechef,
     ...formattedCodeforces,
     ...formattedLeetcode,
-  ].sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+  ].sort((a, b) => a.start_timestamp - b.start_timestamp);
 
   return (
     <div style={{ padding: "1rem" }}>
@@ -116,6 +125,8 @@ export default async function Home(params) {
               name={contest.name}
               site={contest.platform}
               start_time={contest.start_time}
+              start_datetime={contest.start_datetime}
+              duration_seconds={contest.duration_seconds}
               url={contest.url}
             />
           </Grid>
