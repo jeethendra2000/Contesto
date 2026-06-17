@@ -1,3 +1,10 @@
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import EmailIcon from "@mui/icons-material/Email";
+
 export default function Footer() {
   return (
     <footer className="page-footer !bg-red-500">
@@ -16,27 +23,69 @@ export default function Footer() {
           </div>
           <div className="col l4 offset-l2 s12">
             <h5 className="white-text">Connect</h5>
+
             <ul>
               <li>
-                <a className="grey-text text-lighten-3" href="#!">
-                  Whatsapp
+                <a
+                  className="grey-text text-lighten-3"
+                  href="https://github.com/jeethendra2000"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <GitHubIcon fontSize="small" />
+                  GitHub
                 </a>
               </li>
+
               <li>
-                <a className="grey-text text-lighten-3" href="#!">
-                  Facebook
-                </a>
-              </li>
-              <li>
-                <a className="grey-text text-lighten-3" href="#!">
+                <a
+                  className="grey-text text-lighten-3"
+                  href="https://www.linkedin.com/in/jeethendra2000"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <LinkedInIcon fontSize="small" />
                   LinkedIn
                 </a>
               </li>
               <li>
-                <a className="grey-text text-lighten-3" href="#!">
-                  Instagram
+                <a
+                  className="grey-text text-lighten-3"
+                  href="mailto:jeethendrajeethu8@gmail.com"
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <EmailIcon fontSize="small" />
+                  Gmail
                 </a>
               </li>
+
+              {/* <li>
+                <a
+                  className="grey-text text-lighten-3"
+                  href="https://www.instagram.com/jeethendra_s_r/"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <InstagramIcon fontSize="small" />
+                  Instagram
+                </a>
+              </li> */}
+
+              {/* <li>
+                <a
+                  className="grey-text text-lighten-3"
+                  href="https://facebook.com/JeethendraSR"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
+                  <FacebookIcon fontSize="small" />
+                  Facebook
+                </a>
+              </li> */}
             </ul>
           </div>
         </div>

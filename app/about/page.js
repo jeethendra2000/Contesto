@@ -49,6 +49,14 @@ export default function About() {
               experiences at scale.
             </p>
           </div>
+          <div className="flex gap-4 items-center flex-col justify-center sm:flex-row">
+            <Image
+              src="/confess.png"
+              alt="Vercel logomark"
+              width={200}
+              height={200}
+            />
+          </div>
         </section>
         {/* <div className="flex gap-4 items-center flex-col sm:flex-row">
           <Image
